@@ -1,0 +1,113 @@
+{
+  "variables": {
+    "vsphere-vcenter": "vcsa.domain.local",
+    "vsphere-user": "Administrator@vsphere.local",
+    "vsphere-password": "Password!01",
+    
+    "vsphere-datacenter": "domain",
+    "vsphere-cluster": "domain",
+    "vsphere-network": "Productie",
+    "vsphere-datastore": "datastore1",
+    
+    "vm-cpu-num": "2",
+    "vm-mem-size": "4096",
+    "vm-disk-size": "30600",
+
+    "domain": "domain.local"
+  },
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "sshkey",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "file",
+      "source": "join-command",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'Ansible' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "scripts/ansible.sh"
+    },
+    {
+      
+      "type": "ansible-local",
+      "playbook_file": "./playbook/main.yaml",
+      "role_paths": ["./roles/install_kubernetes"]
+    },
+    {
+      "type": "file",
+      "source": "/tmp/print-joincommand.sh",
+      "destination": "./join-command/print-joincommand.sh",
+      "direction": "download"
+    },
+    {
+      "type": "file",
+      "source": "/tmp/sshkey/id*",
+      "destination": "./sshkey/",
+      "direction": "download"
+    }
+  ],
+  "builders": [
+    {
+      "type": "vsphere-iso",
+      "http_directory": "http",
+      "vcenter_server": "{{user `vsphere-vcenter`}}",
+      "username": "{{user `vsphere-user`}}",
+      "password": "{{user `vsphere-password`}}",
+      "insecure_connection": "true",
+
+      "datacenter": "{{user `vsphere-datacenter`}}",
+      "cluster": "{{user `vsphere-cluster`}}",
+      "network": "{{user `vsphere-network`}}",
+      "datastore": "{{user `vsphere-datastore`}}",
+
+      "vm_name": "{{user `vm-name`}}",
+      "notes": "Build via Packer",
+      "guest_os_type": "ubuntu64Guest",
+      
+      "boot_wait": "10s",
+      "boot_order": "disk,cdrom,floppy",
+
+      "ssh_username": "uadmin",
+      "ssh_password": "Password!01",
+
+      "CPUs": "{{user `vm-cpu-num`}}",
+      "RAM": "{{user `vm-mem-size`}}",
+      "RAM_reserve_all": false,
+      "disk_controller_type": "pvscsi",
+      "disk_size": "{{user `vm-disk-size`}}",
+      "disk_thin_provisioned": true,
+      "network_card": "vmxnet3",
+
+      "iso_urls": [
+        "iso/ubuntu-18.04.4-server-amd64.iso",
+        "http://cdimage.ubuntu.com/ubuntu/releases/bionic/release/ubuntu-18.04.4-server-amd64.iso"
+      ],
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "e2ecdace33c939527cbc9e8d23576381c493b071107207d2040af72595f8990b",
+      "boot_command": [
+        "<esc><wait>",
+        "<esc><wait>",
+        "<enter><wait>",
+        "/install/vmlinuz<wait>",
+        " initrd=/install/initrd.gz<wait>",
+        " fb=false debconf/frontend=noninteractive ",
+        " debian-installer=en_US<wait>",
+        " debconf/priority=critical",
+        " kbd-chooser/method=us<wait>",
+        " keyboard-configuration/layout=USA<wait>",
+        " keyboard-configuration/variant=USA<wait>",
+        " locale=en_US<wait>",
+        " netcfg/get_domain={{user `domain`}}<wait>",
+        " netcfg/get_hostname={{user `vm-name`}}<wait>",
+        " grub-installer/bootdev=/dev/sda<wait>",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
+        " -- <wait>",
+        "<enter><wait>"
+      ]
+    }
+  ]
+}

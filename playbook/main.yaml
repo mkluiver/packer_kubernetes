@@ -1,0 +1,54 @@
+- hosts: 127.0.0.1
+  gather_facts: yes
+  become: true
+  connection: local
+  
+  roles:
+    - install_kubernetes
+
+  tasks:
+    - name: create the 'ubuntu' user
+      user: name=ubuntu append=yes state=present createhome=yes shell=/bin/bash
+
+    - name: allow 'ubuntu' to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        line: 'ubuntu ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - openssh_keypair:
+        path: /tmp/sshkey/id_k8s
+      when: "'master' in ansible_hostname"
+
+    - name: set up authorized keys for the ubuntu user
+      authorized_key: user=ubuntu key="{{item}}"
+      with_file:
+        - /tmp/sshkey/id_k8s.pub
+
+    - name: create .kube directory
+      file:
+        path: /home/ubuntu/.kube
+        state: directory
+        mode: 0755
+        owner: ubuntu
+      when: "'master' in ansible_hostname"
+
+    - name: copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/ubuntu/.kube/config
+        remote_src: yes
+        owner: ubuntu
+      when: "'master' in ansible_hostname"
+
+    - name: Change permissions on sshkey folder
+      file:
+        path: /tmp/sshkey
+        state: directory
+        recurse: yes
+        owner: uadmin
+
+
+
+
+

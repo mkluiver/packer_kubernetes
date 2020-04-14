@@ -1,0 +1,13 @@
+
+- name: Copy file with owner and permissions
+  copy:
+    src: /tmp/join-command/print-joincommand.sh
+    dest: /tmp/print-joincommand.sh
+
+- name: Change file ownership, group and permissions
+  file:
+    path: /tmp/join-command/print-joincommand.sh
+    mode: '0777'
+
+- name: Join the node to cluster
+  command: sh /tmp/join-command/print-joincommand.sh
