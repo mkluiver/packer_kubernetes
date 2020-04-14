@@ -10,8 +10,6 @@ Pas de benodigde variabelen aan in de ubuntu1804.json file
     
     Ga naar de sectie genaamd variables, en pas de nodige variabelen aan, zoals de vcenter connectie gegevens en datastore
 
-    Maak met ssh-keygen een nieuwe key aan. Kopieer zowel de private als public key in deze folder. (default staat er al een key, alleen deze )
-
 # Installatie Kube master #
 
 Ga met een Terminal of DOS/Powershell prompt naar de ubuntu folder (waar ook de ubuntu1804.json file staat)
