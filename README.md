@@ -39,7 +39,7 @@ Ga met een Terminal of DOS/Powershell prompt naar de ubuntu folder (waar ook de 
 # Na de installatie #
 
 * Verwijder het print-joincommand.sh script uit de packer folder, deze staat onder de folder join-command.
-* Tijdens de installatie wordt een gebruiker met gebruikersnaam Ubuntu aangemaakt. Ook wordt een public key geinstalleerd. De private key (id_rsa) staat in root folder. Kopieer deze lokaal naar de ~/.ssh folder. Er kan nu een wacthwoordloze ssh connectie opgezet worden. 
+* Tijdens de installatie wordt een gebruiker met gebruikersnaam Ubuntu aangemaakt. Ook wordt een public key geinstalleerd. De private key (id_rsa) staat in root folder. Kopieer deze lokaal naar de ~/.ssh folder. Er kan nu een wachtwoordloze ssh connectie opgezet worden. (gebruik bij de ssh connectie wel -i pad/id_k8s, om de private key te gebruiken)
 * Maak een ssh connectie naar de kube-master node. Je kan nu onder de gebruiker ubuntu met kubectl aan de slag.
 
 # Mogelijke foutmeldingen: #
