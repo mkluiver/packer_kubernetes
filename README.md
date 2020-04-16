@@ -38,7 +38,6 @@ Ga met een Terminal of DOS/Powershell prompt naar de ubuntu folder (waar ook de 
 
 # Na de installatie #
 
-* Verwijder het print-joincommand.sh script uit de packer folder, deze staat onder de folder join-command.
 * Tijdens de installatie wordt een gebruiker met gebruikersnaam Ubuntu aangemaakt. Ook wordt een public key geinstalleerd. De private key (id_) staat in sshkey folder, onder de folder waar de packer_kubernetes. Er kan nu een wachtwoordloze ssh connectie opgezet worden. (gebruik bij de ssh connectie wel "ssh -i sshkey/id_k8s ubuntu@kube-master-ip", om de private key te gebruiken)
 * Maak een ssh connectie naar de kube-master node. Je kan nu onder de gebruiker ubuntu met kubectl aan de slag.
 
@@ -50,3 +49,10 @@ Booting the VM failed -> Controleer de connectie naar de vCenter
 # Geavanceerde instellingen: #
 
 Het standaard wachtwoord voor de ubuntu gebruiker is Password!01, het kan de installatie gewijzigd worden.
+
+# Opnieuw Cluster opzetten #
+
+* Verwijder de sshkey keys uit de packer folder, deze staat onder de sshkeys.
+* Verwijder het print-joincommand.sh script uit de packer folder, deze staat onder de folder join-command.
+* Verwijder de VM's
+* Volg de stappen hierboven weer opnieuw
