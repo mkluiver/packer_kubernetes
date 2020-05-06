@@ -12,7 +12,7 @@ Adjust the required variables in the ubuntu1804.json file
     
 Go to the section called variables, and adjust the necessary variables, such as the vcenter connection data and datastore
 
-# Installatie Kube master #
+# Installatiion Kube master #
 
 Open a Terminal or DOS/Powershell prompt and go to the cloned ubuntu directory
 
@@ -22,7 +22,7 @@ Perform the following command ``` "packer build -var vm-name=kube-master ubuntu1
 After it is finished Turn on the Kube-Master VM and continue
 
 
-# Installatie Kube Nodes #
+# Installation Kube Nodes #
 
 Open a Terminal or DOS/Powershell prompt and go to the cloned ubuntu directory
 
