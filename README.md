@@ -1,58 +1,54 @@
 
+# Install Packer: #
+* Install Packer first, it is available for different OS's and can be downloaded on https://packer.io/downloads.html (This installation has been tested with the Linux and Mac version)
 
-# Installeer Packer: #
-* Installeer eerst Packer, deze is voor verschillende OS'en beschikbaar en kan gedownloade worden op https://packer.io/downloads.html (Deze installatie is getest met de Linux en Mac versie)
-    * Voor Linux, download de binary file, pak hem uit, maar hem executable en verplaats hem naar /usr/local/bin/packer
-    * Voor Windows, download de file en plaatse deze onder een zelf aan te maken folder Packer in C:\Program Files\Packer. Maak vervolgens een path verwijzing zodat de executable uitgevoerd kan worden.
 
-# Voorbereiding: #
-Pas de benodigde variabelen aan in de ubuntu1804.json file 
+# Preparation: #
+Adjust the required variables in the ubuntu1804.json file
     
-    Ga naar de sectie genaamd variables, en pas de nodige variabelen aan, zoals de vcenter connectie gegevens en datastore
+Go to the section called variables, and adjust the necessary variables, such as the vcenter connection data and datastore
 
 # Installatie Kube master #
 
-Ga met een Terminal of DOS/Powershell prompt naar de ubuntu folder (waar ook de ubuntu1804.json file staat)
+Open a Terminal or DOS/Powershell prompt and go to the cloned ubuntu directory
 
     
-    Voer het volgende commando uit "packer build -var vm-name=kube-master ubuntu1804.json"  (waarbij de vm-name een variabele waarde is, dit wordt en de VM naam en de hostnaam)
-    De eerste keer zal deze het Ubuntu iso bestand, de VM wordt aangemaakt en gestart, en een preseed.cfg file installatie
-    Daarna zal Ansible geinstalleerd worden, voert het playbook uit en daarna zal hij opschonen en de VM uitzetten.
+Perform the following command ``` "packer build -var vm-name=kube-master ubuntu1804.json" ``` (where the vm name is a variable value, this will be the VM and host name)
 
-    Zet de Kube-Master VM aan, en volg daarna Installatie Kube Nodes
+After it is finished Turn on the Kube-Master VM and continue
 
-    ** LET OP, op Windows krijg je een allow Windows Security alert, allow deze zodat de http server bereikbaar is.
 
 # Installatie Kube Nodes #
 
-Ga met een Terminal of DOS/Powershell prompt naar de ubuntu folder (waar ook de ubuntu1804.json file staat)
+Open a Terminal or DOS/Powershell prompt and go to the cloned ubuntu directory
 
     
-    ** Voer het volgende commando uit "packer build -var vm-name=kube-node1 ubuntu1804.json"  (waarbij de vm-name een variabele waarde is, dit wordt en de VM naam en de hostnaam)
-    De eerste keer zal deze het Ubuntu iso bestand, de VM wordt aangemaakt en gestart, en een preseed.cfg file installatie
-    Daarna zal Ansible geinstalleerd worden, voert het playbook uit en daarna zal hij opschonen en de VM uitzetten.
+** Run the following command ``` "packer build -var vm-name=kube-node1 ubuntu1804.json" ``` (where the vm name is a variable value, this will be the VM and host name)
 
-    ** LET OP: op Windows krijg je een allow Windows Security alert, allow deze zodat de http server bereikbaar is
+** Repeat the above step for each node you want to add, make sure that the subsequent vm-name contains the term node. (so kube-node2 etc)
 
-    ** Herhaal bovenstaande stap voor elke node die je wilt toevoegen, zorg wel dat de opvolgende vm-name de term node bevat. (dus kube-node2 etc)
+# After installation #
 
-# Na de installatie #
+* During installation, a user with username Ubuntu is created. A public key is also installed. The private key (id_) is located in the packer_kubernetes/sshkey directory. A passwordless ssh connection can now be set up. (use "ssh -i sshkey/id_k8s ubuntu@kube-master-ip" for the ssh connection, to use the private key)
+* Make a ssh connection to the kube-master node. You can now get under the user ubuntu with kubectl to get started.
 
-* Tijdens de installatie wordt een gebruiker met gebruikersnaam Ubuntu aangemaakt. Ook wordt een public key geinstalleerd. De private key (id_) staat in sshkey folder, onder de folder waar de packer_kubernetes. Er kan nu een wachtwoordloze ssh connectie opgezet worden. (gebruik bij de ssh connectie wel "ssh -i sshkey/id_k8s ubuntu@kube-master-ip", om de private key te gebruiken)
-* Maak een ssh connectie naar de kube-master node. Je kan nu onder de gebruiker ubuntu met kubectl aan de slag.
-
-# Mogelijke foutmeldingen: #
+# Possible error messages: #
 
 Booting the VM failed -> Controleer de connectie naar de vCenter
 
+# Advanced settings: #
 
-# Geavanceerde instellingen: #
+The default password for the ubuntu user is Password!01, it can be changed the installation.
 
-Het standaard wachtwoord voor de ubuntu gebruiker is Password!01, het kan de installatie gewijzigd worden.
+# Reassemble Cluster #
 
-# Opnieuw Cluster opzetten #
+* Remove the sshkey keys from the packer_kubernetes/sshkey directory.
+* Remove the print-joincommand.sh script from the packer_kubernetes/join-command directory.
+* Remove the VMs
+* Follow the steps above again
 
-* Verwijder de sshkey keys uit de packer folder, deze staat onder de sshkeys.
-* Verwijder het print-joincommand.sh script uit de packer folder, deze staat onder de folder join-command.
-* Verwijder de VM's
-* Volg de stappen hierboven weer opnieuw
+## License
+
+MIT / BSD
+
+
