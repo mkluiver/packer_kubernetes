@@ -1,5 +1,9 @@
 
-# Install Packer: #
+# Packer Kubernetes installer
+
+This repository contains files to deploy a vanilla one master K8S many nodes cluster. Packer is the tool used for the installation. Clone this repo and follow the instructions below
+
+# Install Packer: 
 * Install Packer first, it is available for different OS's and can be downloaded on https://packer.io/downloads.html (This installation has been tested with the Linux and Mac version)
 
 
